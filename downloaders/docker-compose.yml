@@ -1,0 +1,43 @@
+---
+version: "3.4"
+volumes:
+  sabnzbd_config:
+  qbittorrent_config:
+  downloads:
+    name: downloads
+    driver_opts:
+      type: nfs
+      o: addr=192.168.1.5,nolock,soft,rw
+      device: :/volume1/Plex/downloads
+
+services:
+  sabnzbd:
+    image: lscr.io/linuxserver/sabnzbd:latest
+    container_name: sabnzbd
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Australia/Perth
+    volumes:
+      - sabnzbd_config:/config
+      - downloads:/downloads
+    ports:
+      - 8080:8080
+    restart: unless-stopped
+  qbittorrent:
+    image: lscr.io/linuxserver/qbittorrent:latest
+    container_name: qbittorrent-private
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Australia/Perth
+      - WEBUI_PORT=8085
+    volumes:
+      - qbittorrent_config:/config
+      - downloads:/downloads
+    # network_mode: "service:gluetun"
+    ports:
+      - 8085:8085
+      - 57476:57476
+      - 57476:57476/udp
+    restart: unless-stopped
