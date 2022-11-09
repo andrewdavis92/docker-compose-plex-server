@@ -1,0 +1,46 @@
+---
+version: "3.2"
+volumes:
+  config:
+  tvshows:
+    name: tvshows
+    driver_opts:
+      type: nfs
+      o: addr=192.168.1.5,nolock,soft,ro
+      device: :/volume1/Plex/tvshows
+  movies:
+    name: movies
+    driver_opts:
+      type: nfs
+      o: addr=192.168.1.5,nolock,soft,ro
+      device: :/volume1/Plex/movies
+services:
+  plex:
+    image: lscr.io/linuxserver/plex:latest
+    container_name: plex
+    network_mode: host
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - VERSION=docker
+      - TZ=Australia/Perth
+      - PLEX_CLAIM=claim-WyKNpABGT8o5zi83EH5z
+    volumes:
+      - config:/config
+      - tvshows:/media/tvshows
+      - movies:/media/movies
+      - /dev/shm:/transcode
+    devices: 
+      - /dev/dri:/dev/dri
+    #ports:
+        #- 32400:32400
+        #- 1900:1900/udp
+        #- 3005:3005
+        #- 5353:5353/udp
+        #- 8324:8324
+        #- 32410:32410/udp
+        #- 32412:32412/udp
+        #- 32413:32413/udp
+        #- 32414:32414/udp
+        #- 32469:32469
+    restart: unless-stopped
