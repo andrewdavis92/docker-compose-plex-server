@@ -6,6 +6,7 @@ volumes:
   radarr_config:
   bazarr_config:
   overseerr_config:
+  tautulli_config:
   media:
     name: media
     driver_opts:
@@ -82,3 +83,15 @@ services:
       - 5055:5055
     pull_policy: always
     restart: unless-stopped
+  tautulli:
+    image: ghcr.io/tautulli/tautulli
+    container_name: tautulli
+    restart: unless-stopped
+    volumes:
+      - tautulli_config:/config
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Australia/Perth
+    ports:
+      - 8181:8181
