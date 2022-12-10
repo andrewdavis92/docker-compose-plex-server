@@ -7,12 +7,20 @@ volumes:
   bazarr_config:
   overseerr_config:
   tautulli_config:
+  
   media:
     name: media
     driver_opts:
       type: nfs
       o: addr=192.168.1.5,nolock,soft,rw
       device: :/volume1/Plex
+  
+  backup:
+    name: backup
+    driver_opts:
+      type: nfs
+      o: addr=192.168.1.5,nolock,soft,rw
+      device: /volume1/docker
 
 services:
   prowlarr:
@@ -24,10 +32,12 @@ services:
       - TZ=Australia/Perth
     volumes:
       - prowlarr_config:/config
+      - backup:/backup
     ports:
       - 9696:9696
     pull_policy: always
     restart: unless-stopped
+  
   sonarr:
     image: lscr.io/linuxserver/sonarr:latest
     container_name: sonarr
@@ -38,10 +48,12 @@ services:
     volumes:
       - sonarr_config:/config
       - media:/media
+      - backup:/backup
     ports:
       - 8989:8989
     pull_policy: always
     restart: unless-stopped
+  
   radarr:
     image: lscr.io/linuxserver/radarr:latest
     container_name: radarr
@@ -52,10 +64,12 @@ services:
     volumes:
       - radarr_config:/config
       - media:/media
+      - backup:/backup
     ports:
       - 7878:7878
     pull_policy: always
     restart: unless-stopped
+  
   bazarr:
     image: lscr.io/linuxserver/bazarr:latest
     container_name: bazarr
@@ -66,10 +80,12 @@ services:
     volumes:
       - bazarr_config:/config
       - media:/media
+      - backup:/backup
     ports:
       - 6767:6767
     pull_policy: always
     restart: unless-stopped
+  
   overseerr:
     image: lscr.io/linuxserver/overseerr:latest
     container_name: overseerr
@@ -79,16 +95,19 @@ services:
       - TZ=Australia/Perth
     volumes:
       - overseerr_config:/config
+      - backup:/backup
     ports:
       - 5055:5055
     pull_policy: always
     restart: unless-stopped
+  
   tautulli:
     image: ghcr.io/tautulli/tautulli
     container_name: tautulli
     restart: unless-stopped
     volumes:
       - tautulli_config:/config
+      - backup:/backup
     environment:
       - PUID=1000
       - PGID=1000
