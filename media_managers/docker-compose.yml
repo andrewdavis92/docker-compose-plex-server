@@ -3,6 +3,7 @@ version: "2.1"
 volumes:
   prowlarr_config:
   sonarr_config:
+  sonarr_anime_config:
   radarr_config:
   bazarr_config:
   overseerr_config:
