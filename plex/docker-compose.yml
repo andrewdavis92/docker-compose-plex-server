@@ -20,6 +20,12 @@ volumes:
       type: nfs
       o: addr=192.168.1.5,nolock,soft,ro
       device: :/volume1/Plex/movies
+  music:
+    name: music
+    driver_opts:
+      type: nfs
+      o: addr=192.168.1.5,nolock,soft,ro
+      device: :/volume1/Plex/music
 services:
   plex:
     image: lscr.io/linuxserver/plex:latest
