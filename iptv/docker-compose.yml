@@ -1,0 +1,40 @@
+services:
+  gluetun:
+    image: qmcgaw/gluetun:latest
+    container_name: gluetun
+    cap_add:
+      - NET_ADMIN
+    devices:
+      - /dev/net/tun:/dev/net/tun
+    environment:
+      # --- VPN PROVIDER ---
+      - VPN_SERVICE_PROVIDER=mullvad
+      - VPN_TYPE=wireguard
+
+      # --- MULLVAD CONFIG ---
+      - WIREGUARD_PRIVATE_KEY=${WIREGUARD_PRIVATE_KEY}
+      - WIREGUARD_ADDRESSES=${WIREGUARD_ADDRESSES}
+
+      # optional but recommended
+      - SERVER_COUNTRIES=Netherlands
+
+      # kill switch enabled by default in gluetun
+    ports:
+      - 9191:9191   # Dispatcharr UI exposed via VPN container
+    restart: unless-stopped
+
+  dispatcharr:
+    image: ghcr.io/dispatcharr/dispatcharr:latest
+    container_name: dispatcharr
+    network_mode: "service:gluetun"
+    depends_on:
+      - gluetun
+    environment:
+      - DISPATCHARR_ENV=aio
+      - DISPATCHARR_LOG_LEVEL=info
+    volumes:
+      - dispatcharr_data:/data
+    restart: unless-stopped
+
+volumes:
+  dispatcharr_data:
