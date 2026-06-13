@@ -16,7 +16,7 @@ services:
       - WIREGUARD_ADDRESSES=${WIREGUARD_ADDRESSES}
 
       # optional but recommended
-      - SERVER_COUNTRIES=Netherlands
+      - SERVER_COUNTRIES=United States
 
       # kill switch enabled by default in gluetun
     ports:
