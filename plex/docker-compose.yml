@@ -20,6 +20,12 @@ volumes:
       type: nfs
       o: addr=192.168.1.5,nolock,soft,ro
       device: :/volume1/Plex/movies
+  bl:
+    name: bl
+    driver_opts:
+      type: nfs
+      o: addr=192.168.1.5,nolock,soft,ro
+      device: :/volume/Plex/bl
   music:
     name: music
     driver_opts:
@@ -42,6 +48,7 @@ services:
       - tvshows:/media/tvshows
       - anime:/media/anime
       - movies:/media/movies
+      - bl:/media/bl
       - music:/media/music
       - /dev/shm:/transcode
     devices: 
