@@ -8,7 +8,6 @@ volumes:
   bazarr_config:
   overseerr_config:
   tautulli_config:
-  dispatcharr_config:
   
   media:
     name: media
